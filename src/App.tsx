@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import getProviderSigner from "./utils/ethereum";
 import { Button } from "@nextui-org/react";
 import "./App.css";
+import AppNavigation from "./components/AppNavigation";
+import formatAddress from "./utils/formatAddress";
 
 const App = () => {
   const [account, setAccount] = useState<string>();
@@ -19,12 +21,13 @@ const App = () => {
   };
 
   return (
-    <div className="App">
-      <Button color="primary" onClick={connect}>
-        {connected ? "Connected" : "Connect"}
-      </Button>
-      <p> {account && `Connected account: ${account}`}</p>
-    </div>
+    <>
+      <AppNavigation>
+        <Button color="primary" onClick={connect}>
+          {connected ? formatAddress(account!) : "Connect"}
+        </Button>
+      </AppNavigation>
+    </>
   );
 };
 
