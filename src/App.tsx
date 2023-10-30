@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import getProviderSigner from "./utils/ethereum";
+import { Button } from "@nextui-org/react";
 import "./App.css";
 
 const App = () => {
@@ -11,7 +12,7 @@ const App = () => {
     try {
       const account = await signer?.getAddress();
       setAccount(account);
-      setConnected(true);
+      if (account) setConnected(true);
     } catch (err) {
       console.warn(`failed to connect..`, err);
     }
@@ -19,9 +20,9 @@ const App = () => {
 
   return (
     <div className="App">
-      <button style={{ padding: 10, margin: 10 }} onClick={connect}>
+      <Button color="primary" onClick={connect}>
         {connected ? "Connected" : "Connect"}
-      </button>
+      </Button>
       <p> {account && `Connected account: ${account}`}</p>
     </div>
   );
