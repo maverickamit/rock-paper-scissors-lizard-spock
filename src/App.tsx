@@ -4,11 +4,7 @@ import { Button } from "@nextui-org/react";
 import "./App.css";
 import AppNavigation from "./components/AppNavigation";
 import formatAddress from "./utils/formatAddress";
-import "../contract/Hasher";
 import { Outlet } from "react-router-dom";
-
-import hasherContract from "../contract/Hasher";
-import CreateGame from "./components/CreateGame";
 
 const App = () => {
   const [account, setAccount] = useState<string>();

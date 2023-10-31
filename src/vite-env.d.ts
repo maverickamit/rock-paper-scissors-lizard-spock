@@ -5,4 +5,5 @@ interface Window {
 }
 interface ImportMetaEnv {
   VITE_HASHER_CONTRACT_ADDRESS: string;
+  VITE_SALT: string;
 }

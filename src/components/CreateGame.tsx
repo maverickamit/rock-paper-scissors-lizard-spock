@@ -1,14 +1,39 @@
 import { useState } from "react";
-import { Button, Select, SelectItem } from "@nextui-org/react";
+import { Input, Button, Select, SelectItem } from "@nextui-org/react";
+import getHasherContract from "../../contract/HasherContract";
+import getRPSContractFactory from "../../contract/RPSContractFactory";
+
+const salt = import.meta.env.VITE_SALT;
 
 const CreateGame = () => {
-  const [selectedMove, setSelectedMove] = useState("1"); // Default value is Rock (1)
+  const [selectedMove, setSelectedMove] = useState("");
+  const [player2Address, setPlayer2Address] = useState(""); //
 
   const handleMoveChange = (e) => {
     setSelectedMove(e.target.value);
   };
 
-  const handleCreateGame = () => {
+  const handleCreateGame = async () => {
+    const hasherContract = await getHasherContract();
+    const RPSContractFactory = await getRPSContractFactory();
+
+    if (player2Address) {
+      try {
+        const c1hash = await hasherContract.hash(1, salt);
+        const RPSContract = await RPSContractFactory.deploy(
+          c1hash,
+          player2Address
+        );
+        const address = await RPSContract.getAddress();
+
+        setSelectedMove("");
+        setPlayer2Address("");
+
+        console.log("deployed at ", address);
+      } catch (e) {
+        console.log("error", e);
+      }
+    }
     console.log("Selected Move:", selectedMove);
   };
   const moves = [
@@ -35,7 +60,7 @@ const CreateGame = () => {
   ];
 
   return (
-    <div className="flex justify-center items-center">
+    <div className="flex justify-center items-center mt-20">
       <Select
         items={moves}
         label="Your move"
@@ -43,9 +68,19 @@ const CreateGame = () => {
         className="max-w-xs"
         isRequired
         onChange={handleMoveChange}
+        selectedKeys={selectedMove}
       >
         {(move) => <SelectItem key={move.value}>{move.label}</SelectItem>}
       </Select>
+      <Input
+        className="w-80 ml-5"
+        type="text"
+        label="Player 2 Address"
+        placeholder="Enter your opponent's address"
+        value={player2Address}
+        onChange={(e) => setPlayer2Address(e.target.value)}
+        isRequired
+      />
       <Button className="ml-8" color="primary" onClick={handleCreateGame}>
         Create
       </Button>
