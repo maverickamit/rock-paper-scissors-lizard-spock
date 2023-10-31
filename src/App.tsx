@@ -1,9 +1,14 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import getProviderSigner from "./utils/ethereum";
 import { Button } from "@nextui-org/react";
 import "./App.css";
 import AppNavigation from "./components/AppNavigation";
 import formatAddress from "./utils/formatAddress";
+import "../contract/Hasher";
+import { Outlet } from "react-router-dom";
+
+import hasherContract from "../contract/Hasher";
+import CreateGame from "./components/CreateGame";
 
 const App = () => {
   const [account, setAccount] = useState<string>();
@@ -27,6 +32,8 @@ const App = () => {
           {connected ? formatAddress(account!) : "Connect"}
         </Button>
       </AppNavigation>
+
+      <Outlet />
     </>
   );
 };

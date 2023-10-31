@@ -3,17 +3,18 @@ import {
   NavbarBrand,
   NavbarContent,
   NavbarItem,
-  Link,
-  Button,
 } from "@nextui-org/react";
+import { Link } from "react-router-dom";
 
 const AppNavigation = ({ children }) => {
   return (
     <Navbar>
       <NavbarBrand>
-        <p className="font-bold text-inherit">
-          Rock Paper Scissors Lizard Spock
-        </p>
+        <Link to={"/"}>
+          <p className="font-bold text-inherit">
+            Rock Paper Scissors Lizard Spock
+          </p>
+        </Link>
       </NavbarBrand>
 
       <NavbarContent justify="end">
