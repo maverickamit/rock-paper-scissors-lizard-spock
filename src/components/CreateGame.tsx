@@ -6,18 +6,23 @@ import getRPSContractFactory from "../../contract/RPSContractFactory";
 const salt = import.meta.env.VITE_SALT;
 
 const CreateGame = () => {
-  const [selectedMove, setSelectedMove] = useState("");
+  const [selectedMove, setSelectedMove] = useState("0");
   const [player2Address, setPlayer2Address] = useState(""); //
 
   const handleMoveChange = (e) => {
     setSelectedMove(e.target.value);
   };
 
+  const resetValues = () => {
+    setSelectedMove("0");
+    setPlayer2Address("");
+  };
+
   const handleCreateGame = async () => {
     const hasherContract = await getHasherContract();
     const RPSContractFactory = await getRPSContractFactory();
 
-    if (player2Address) {
+    if (selectedMove !== "0" && player2Address) {
       try {
         const c1hash = await hasherContract.hash(1, salt);
         const RPSContract = await RPSContractFactory.deploy(
@@ -25,9 +30,7 @@ const CreateGame = () => {
           player2Address
         );
         const address = await RPSContract.getAddress();
-
-        setSelectedMove("");
-        setPlayer2Address("");
+        resetValues();
 
         console.log("deployed at ", address);
       } catch (e) {
@@ -37,6 +40,10 @@ const CreateGame = () => {
     console.log("Selected Move:", selectedMove);
   };
   const moves = [
+    {
+      label: "Select a move",
+      value: "0",
+    },
     {
       label: "Rock",
       value: "1",
@@ -58,7 +65,6 @@ const CreateGame = () => {
       value: "5",
     },
   ];
-
   return (
     <div className="flex justify-center items-center mt-20">
       <Select
@@ -67,8 +73,8 @@ const CreateGame = () => {
         placeholder="Select a move"
         className="max-w-xs"
         isRequired
-        onChange={handleMoveChange}
         selectedKeys={selectedMove}
+        onChange={handleMoveChange}
       >
         {(move) => <SelectItem key={move.value}>{move.label}</SelectItem>}
       </Select>
