@@ -5,7 +5,8 @@ import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { NextUIProvider } from "@nextui-org/react";
 import CreateGame from "./components/CreateGame.tsx";
-import Landing from "./components/landing.tsx";
+import Landing from "./components/Landing.tsx";
+import JoinGame from "./components/JoinGame.tsx";
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
       {
         path: "create-game",
         element: <CreateGame />,
+      },
+      {
+        path: "join-game",
+        element: <JoinGame />,
       },
     ],
   },

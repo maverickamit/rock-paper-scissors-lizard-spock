@@ -11,9 +11,11 @@ const Landing = () => {
           Create a new game
         </Button>
       </Link>
-      <Button className="m-5" color="secondary">
-        Join a game
-      </Button>
+      <Link to={"join-game"}>
+        <Button className="m-5" color="secondary">
+          Join a game
+        </Button>
+      </Link>
     </div>
   );
 };
