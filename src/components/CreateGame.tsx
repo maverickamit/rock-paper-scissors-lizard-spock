@@ -2,11 +2,13 @@ import { useState } from "react";
 import { Input, Button, Select, SelectItem } from "@nextui-org/react";
 import getHasherContract from "../../contract/HasherContract";
 import getRPSContractFactory from "../../contract/RPSContractFactory";
+import { ethers } from "ethers";
 
 const salt = import.meta.env.VITE_SALT;
 
 const CreateGame = () => {
   const [selectedMove, setSelectedMove] = useState("0");
+  const [stakedAmount, setStakedAmount] = useState(0);
   const [player2Address, setPlayer2Address] = useState(""); //
 
   const handleMoveChange = (e) => {
@@ -16,28 +18,29 @@ const CreateGame = () => {
   const resetValues = () => {
     setSelectedMove("0");
     setPlayer2Address("");
+    setStakedAmount(0);
   };
 
   const handleCreateGame = async () => {
     const hasherContract = await getHasherContract();
     const RPSContractFactory = await getRPSContractFactory();
 
-    if (selectedMove !== "0" && player2Address) {
+    if (selectedMove !== "0" && player2Address && stakedAmount) {
       try {
+        const amountToStake = ethers.parseEther(stakedAmount.toString()); // Replace with the desired amount in Ether
+        const address = ethers.getAddress(player2Address);
         const c1hash = await hasherContract.hash(1, salt);
-        const RPSContract = await RPSContractFactory.deploy(
-          c1hash,
-          player2Address
-        );
-        const address = await RPSContract.getAddress();
+        const RPSContract = await RPSContractFactory.deploy(c1hash, address, {
+          value: amountToStake,
+        });
+        const deployedAddress = await RPSContract.getAddress();
         resetValues();
 
-        console.log("deployed at ", address);
+        console.log("deployed at ", deployedAddress);
       } catch (e) {
         console.log("error", e);
       }
     }
-    console.log("Selected Move:", selectedMove);
   };
   const moves = [
     {
@@ -66,31 +69,44 @@ const CreateGame = () => {
     },
   ];
   return (
-    <div className="flex justify-center items-center mt-20">
-      <Select
-        items={moves}
-        label="Your move"
-        placeholder="Select a move"
-        className="max-w-xs"
-        isRequired
-        selectedKeys={selectedMove}
-        onChange={handleMoveChange}
-      >
-        {(move) => <SelectItem key={move.value}>{move.label}</SelectItem>}
-      </Select>
-      <Input
-        className="w-80 ml-5"
-        type="text"
-        label="Player 2 Address"
-        placeholder="Enter your opponent's address"
-        value={player2Address}
-        onChange={(e) => setPlayer2Address(e.target.value)}
-        isRequired
-      />
-      <Button className="ml-8" color="primary" onClick={handleCreateGame}>
-        Create
-      </Button>
-    </div>
+    <>
+      <div className="flex justify-center items-center mt-20">
+        <Select
+          items={moves}
+          label="Your move"
+          placeholder="Select a move"
+          className="w-80"
+          isRequired
+          selectedKeys={selectedMove}
+          onChange={handleMoveChange}
+        >
+          {(move) => <SelectItem key={move.value}>{move.label}</SelectItem>}
+        </Select>
+        <Input
+          className="w-80 ml-5"
+          type="text"
+          label="Player 2 Address"
+          placeholder="Enter your opponent's address"
+          value={player2Address}
+          onChange={(e) => setPlayer2Address(e.target.value)}
+          isRequired
+        />
+        <Button className="ml-8" color="primary" onClick={handleCreateGame}>
+          Create
+        </Button>
+      </div>
+      <div className="mt-4 p-4 flex items-center justify-center">
+        <Input
+          className="w-1/3 ml-5"
+          type="number"
+          label="Stake amount"
+          placeholder="Enter the amount to be staked in ETH"
+          value={stakedAmount.toString()}
+          onChange={(e) => setStakedAmount(parseFloat(e.target.value))}
+          isRequired
+        />
+      </div>
+    </>
   );
 };
 
