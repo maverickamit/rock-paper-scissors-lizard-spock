@@ -3,10 +3,12 @@ import { Input, Button, Select, SelectItem } from "@nextui-org/react";
 import getHasherContract from "../../contract/HasherContract";
 import getRPSContractFactory from "../../contract/RPSContractFactory";
 import { ethers } from "ethers";
+import { useNavigate } from "react-router-dom";
 
 const salt = import.meta.env.VITE_SALT;
 
 const CreateGame = () => {
+  const navigate = useNavigate();
   const [selectedMove, setSelectedMove] = useState("0");
   const [stakedAmount, setStakedAmount] = useState(0);
   const [player2Address, setPlayer2Address] = useState(""); //
@@ -35,8 +37,9 @@ const CreateGame = () => {
         });
         const deployedAddress = await RPSContract.getAddress();
         resetValues();
+        await RPSContract.waitForDeployment();
 
-        console.log("deployed at ", deployedAddress);
+        navigate("/game-details/" + deployedAddress);
       } catch (e) {
         console.log("error", e);
       }
