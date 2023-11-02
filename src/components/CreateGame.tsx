@@ -31,10 +31,11 @@ const CreateGame = () => {
       try {
         const amountToStake = ethers.parseEther(stakedAmount.toString()); // Replace with the desired amount in Ether
         const address = ethers.getAddress(player2Address);
-        const c1hash = await hasherContract.hash(1, salt);
+        const c1hash = await hasherContract.hash(selectedMove, salt);
         const RPSContract = await RPSContractFactory.deploy(c1hash, address, {
           value: amountToStake,
         });
+
         const deployedAddress = await RPSContract.getAddress();
         resetValues();
         await RPSContract.waitForDeployment();
