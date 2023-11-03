@@ -14,7 +14,7 @@ const CreateGame = () => {
   const [player2Address, setPlayer2Address] = useState(""); //
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleMoveChange = (e) => {
+  const handleMoveChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedMove(e.target.value);
   };
 

@@ -18,7 +18,7 @@ const GameDetails = () => {
 
   const [stake, setStake] = useState("0");
 
-  const handleMoveChange = (e) => {
+  const handleMoveChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (e.target.name == "player1") setSelectedMoveP1(e.target.value);
     if (e.target.name == "player2") setSelectedMoveP2(e.target.value);
   };
