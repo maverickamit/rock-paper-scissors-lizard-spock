@@ -11,6 +11,10 @@ const GameDetails = () => {
   const { deployedGameAddress } = useParams();
   const [selectedMoveP1, setSelectedMoveP1] = useState("0");
   const [selectedMoveP2, setSelectedMoveP2] = useState("0");
+  const [isLoading, setIsLoading] = useState({
+    playButton: false,
+    solveButton: false,
+  });
 
   const [stake, setStake] = useState("0");
 
@@ -20,8 +24,8 @@ const GameDetails = () => {
   };
 
   const resetValues = () => {
-    setSelectedMoveP1("");
-    setSelectedMoveP2("");
+    setSelectedMoveP1("0");
+    setSelectedMoveP2("0");
   };
 
   useEffect(() => {
@@ -41,6 +45,7 @@ const GameDetails = () => {
 
   const handlePlay = async () => {
     if (selectedMoveP2 !== "0" && ethers.isAddress(deployedGameAddress)) {
+      setIsLoading({ ...isLoading, playButton: true });
       try {
         const RPSContract = await getRPSContract(deployedGameAddress);
         await RPSContract.play(selectedMoveP2, {
@@ -52,11 +57,13 @@ const GameDetails = () => {
       } catch (e) {
         console.log("error", e);
       }
+      setIsLoading({ ...isLoading, playButton: false });
     }
   };
 
   const handleSolve = async () => {
     if (ethers.isAddress(deployedGameAddress) && parseInt(selectedMoveP1)) {
+      setIsLoading({ ...isLoading, solveButton: true });
       try {
         const RPSContract = await getRPSContract(deployedGameAddress);
         await RPSContract.solve(parseInt(selectedMoveP1), salt);
@@ -66,6 +73,7 @@ const GameDetails = () => {
       } catch (e) {
         console.log("error", e);
       }
+      setIsLoading({ ...isLoading, solveButton: false });
     }
   };
   const moves = [
@@ -114,7 +122,12 @@ const GameDetails = () => {
             <p>{`Stake amount: ${stake} ETH`}</p>
           </CardBody>
         </Card>
-        <Button className="ml-8" color="primary" onClick={handlePlay}>
+        <Button
+          className="ml-8"
+          color="primary"
+          onClick={handlePlay}
+          isLoading={isLoading.playButton}
+        >
           Play
         </Button>
       </div>
@@ -131,7 +144,12 @@ const GameDetails = () => {
         >
           {(move) => <SelectItem key={move.value}>{move.label}</SelectItem>}
         </Select>
-        <Button className="ml-8 " color="primary" onClick={handleSolve}>
+        <Button
+          className="ml-8 "
+          color="primary"
+          onClick={handleSolve}
+          isLoading={isLoading.solveButton}
+        >
           Decide winner
         </Button>
       </div>

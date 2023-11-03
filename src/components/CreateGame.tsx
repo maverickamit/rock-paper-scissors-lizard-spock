@@ -12,6 +12,7 @@ const CreateGame = () => {
   const [selectedMove, setSelectedMove] = useState("0");
   const [stakedAmount, setStakedAmount] = useState(0);
   const [player2Address, setPlayer2Address] = useState(""); //
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleMoveChange = (e) => {
     setSelectedMove(e.target.value);
@@ -28,6 +29,7 @@ const CreateGame = () => {
     const RPSContractFactory = await getRPSContractFactory();
 
     if (selectedMove !== "0" && player2Address && stakedAmount) {
+      setIsLoading(true); //set loading to true
       try {
         const amountToStake = ethers.parseEther(stakedAmount.toString()); // Replace with the desired amount in Ether
         const address = ethers.getAddress(player2Address);
@@ -39,11 +41,11 @@ const CreateGame = () => {
         const deployedAddress = await RPSContract.getAddress();
         resetValues();
         await RPSContract.waitForDeployment();
-
         navigate("/game-details/" + deployedAddress);
       } catch (e) {
         console.log("error", e);
       }
+      setIsLoading(false); //set loading to true
     }
   };
   const moves = [
@@ -95,7 +97,12 @@ const CreateGame = () => {
           onChange={(e) => setPlayer2Address(e.target.value)}
           isRequired
         />
-        <Button className="ml-8" color="primary" onClick={handleCreateGame}>
+        <Button
+          className="ml-8"
+          color="primary"
+          onClick={handleCreateGame}
+          isLoading={isLoading}
+        >
           Create
         </Button>
       </div>
