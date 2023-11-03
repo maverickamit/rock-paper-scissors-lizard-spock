@@ -3,16 +3,18 @@ import { Input, Button, Select, SelectItem } from "@nextui-org/react";
 import getHasherContract from "../../contract/HasherContract";
 import getRPSContractFactory from "../../contract/RPSContractFactory";
 import { ethers } from "ethers";
-import { useNavigate } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { Card, CardBody } from "@nextui-org/react";
+import { Link } from "@nextui-org/react";
 
 const salt = import.meta.env.VITE_SALT;
 
 const CreateGame = () => {
-  const navigate = useNavigate();
   const [selectedMove, setSelectedMove] = useState("0");
   const [stakedAmount, setStakedAmount] = useState(0);
   const [player2Address, setPlayer2Address] = useState(""); //
   const [isLoading, setIsLoading] = useState(false);
+  const [deployedGameAddress, setDeployedGameAddress] = useState("");
 
   const handleMoveChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedMove(e.target.value);
@@ -39,9 +41,10 @@ const CreateGame = () => {
         });
 
         const deployedAddress = await RPSContract.getAddress();
+
         resetValues();
         await RPSContract.waitForDeployment();
-        navigate("/game-details/" + deployedAddress);
+        setDeployedGameAddress(deployedAddress);
       } catch (e) {
         console.log("error", e);
       }
@@ -117,6 +120,18 @@ const CreateGame = () => {
           isRequired
         />
       </div>
+      {deployedGameAddress ? (
+        <div className="mt-4 p-4 flex items-center justify-center">
+          <Card className="w-1/2 ml-5 border" shadow="none">
+            <CardBody className=" flex-row items-center justify-center">
+              <p>{`Deployed Game: `}</p>
+              <RouterLink to={"/game-details/" + deployedGameAddress}>
+                <Link>{deployedGameAddress}</Link>
+              </RouterLink>
+            </CardBody>
+          </Card>
+        </div>
+      ) : null}
     </>
   );
 };
