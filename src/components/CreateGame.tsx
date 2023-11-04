@@ -3,9 +3,8 @@ import { Input, Button, Select, SelectItem } from "@nextui-org/react";
 import getHasherContract from "../../contract/HasherContract";
 import getRPSContractFactory from "../../contract/RPSContractFactory";
 import { ethers } from "ethers";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import { Card, CardBody } from "@nextui-org/react";
-import { Link } from "@nextui-org/react";
 import generateSalt from "../utils/generateSalt";
 import localForage from "localforage";
 
@@ -127,11 +126,12 @@ const CreateGame = () => {
           <Card className="w-1/2 ml-5 border" shadow="none">
             <CardBody className=" flex-row items-center justify-center">
               <p>{`Deployed Game: `}</p>
-              <Link>
-                <RouterLink to={"/game-details/" + deployedGameAddress}>
-                  {deployedGameAddress}
-                </RouterLink>
-              </Link>
+              <RouterLink
+                className=" text-blue-600 dark:text-blue-500 hover:underline"
+                to={"/game-details/" + deployedGameAddress}
+              >
+                {deployedGameAddress}
+              </RouterLink>
             </CardBody>
           </Card>
         </div>
