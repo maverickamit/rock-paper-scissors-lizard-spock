@@ -6,8 +6,8 @@ import { ethers } from "ethers";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { Card, CardBody } from "@nextui-org/react";
 import { Link } from "@nextui-org/react";
-
-const salt = import.meta.env.VITE_SALT;
+import generateSalt from "../utils/generateSalt";
+import localForage from "localforage";
 
 const CreateGame = () => {
   const [selectedMove, setSelectedMove] = useState("0");
@@ -35,6 +35,8 @@ const CreateGame = () => {
       try {
         const amountToStake = ethers.parseEther(stakedAmount.toString()); // Replace with the desired amount in Ether
         const address = ethers.getAddress(player2Address);
+        const salt = await generateSalt();
+        await localForage.setItem("rps-salt", salt);
         const c1hash = await hasherContract.hash(selectedMove, salt);
         const RPSContract = await RPSContractFactory.deploy(c1hash, address, {
           value: amountToStake,
@@ -125,9 +127,11 @@ const CreateGame = () => {
           <Card className="w-1/2 ml-5 border" shadow="none">
             <CardBody className=" flex-row items-center justify-center">
               <p>{`Deployed Game: `}</p>
-              <RouterLink to={"/game-details/" + deployedGameAddress}>
-                <Link>{deployedGameAddress}</Link>
-              </RouterLink>
+              <Link>
+                <RouterLink to={"/game-details/" + deployedGameAddress}>
+                  {deployedGameAddress}
+                </RouterLink>
+              </Link>
             </CardBody>
           </Card>
         </div>

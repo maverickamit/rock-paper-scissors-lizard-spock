@@ -4,9 +4,7 @@ import getRPSContract from "../../contract/RPSContract";
 import { useParams } from "react-router-dom";
 import { ethers } from "ethers";
 import { Card, CardBody } from "@nextui-org/react";
-
-const salt = import.meta.env.VITE_SALT;
-
+import localForage from "localforage";
 const GameDetails = () => {
   const { deployedGameAddress } = useParams();
   const [selectedMoveP1, setSelectedMoveP1] = useState("0");
@@ -48,9 +46,13 @@ const GameDetails = () => {
       setIsLoading({ ...isLoading, playButton: true });
       try {
         const RPSContract = await getRPSContract(deployedGameAddress);
-        await RPSContract.play(selectedMoveP2, {
-          value: ethers.parseEther(stake),
-        });
+        const tx: ethers.TransactionResponse = await RPSContract.play(
+          selectedMoveP2,
+          {
+            value: ethers.parseEther(stake),
+          }
+        );
+        tx.wait();
         resetValues();
 
         console.log("success");
@@ -65,8 +67,14 @@ const GameDetails = () => {
     if (ethers.isAddress(deployedGameAddress) && parseInt(selectedMoveP1)) {
       setIsLoading({ ...isLoading, solveButton: true });
       try {
+        const salt = await localForage.getItem("rps-salt");
+
         const RPSContract = await getRPSContract(deployedGameAddress);
-        await RPSContract.solve(parseInt(selectedMoveP1), salt);
+        const tx: ethers.TransactionResponse = await RPSContract.solve(
+          parseInt(selectedMoveP1),
+          salt
+        );
+        tx.wait();
         resetValues();
 
         console.log("success");
