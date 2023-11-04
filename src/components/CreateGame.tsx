@@ -11,7 +11,7 @@ import { toast } from "react-toastify";
 
 const CreateGame = () => {
   const [selectedMove, setSelectedMove] = useState("0");
-  const [stakedAmount, setStakedAmount] = useState(0);
+  const [stakedAmount, setStakedAmount] = useState("0");
   const [player2Address, setPlayer2Address] = useState(""); //
   const [isLoading, setIsLoading] = useState(false);
   const [deployedGameAddress, setDeployedGameAddress] = useState("");
@@ -23,7 +23,7 @@ const CreateGame = () => {
   const resetValues = () => {
     setSelectedMove("0");
     setPlayer2Address("");
-    setStakedAmount(0);
+    setStakedAmount("0");
   };
 
   const handleCreateGame = async () => {
@@ -33,7 +33,7 @@ const CreateGame = () => {
     if (selectedMove !== "0" && player2Address && stakedAmount) {
       setIsLoading(true); //set loading to true
       try {
-        const amountToStake = ethers.parseEther(stakedAmount.toString()); // Replace with the desired amount in Ether
+        const amountToStake = ethers.parseEther(stakedAmount); // Replace with the desired amount in Ether
         const address = ethers.getAddress(player2Address);
         const salt = await generateSalt();
         await localForage.setItem("rps-salt", salt);
@@ -116,11 +116,11 @@ const CreateGame = () => {
       <div className="mt-4 p-4 flex items-center justify-center">
         <Input
           className="w-1/3 ml-5"
-          type="number"
+          type="text"
           label="Stake amount"
           placeholder="Enter the amount to be staked in ETH"
-          value={stakedAmount.toString()}
-          onChange={(e) => setStakedAmount(parseFloat(e.target.value))}
+          value={stakedAmount}
+          onChange={(e) => setStakedAmount(e.target.value)}
           isRequired
         />
       </div>

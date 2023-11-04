@@ -14,6 +14,8 @@ const GameDetails = () => {
   const [isLoading, setIsLoading] = useState({
     playButton: false,
     solveButton: false,
+    timeOutButtonp1: false,
+    timeOutButtonp2: false,
   });
 
   const [stake, setStake] = useState("0");
@@ -54,7 +56,7 @@ const GameDetails = () => {
             value: ethers.parseEther(stake),
           }
         );
-        tx.wait();
+        await tx.wait();
         resetValues();
         toast.success("Success!");
         console.log("success");
@@ -77,7 +79,7 @@ const GameDetails = () => {
           parseInt(selectedMoveP1),
           salt
         );
-        tx.wait();
+        await tx.wait();
         resetValues();
         toast.success("Success!");
       } catch (e) {
@@ -86,6 +88,36 @@ const GameDetails = () => {
       }
       setIsLoading({ ...isLoading, solveButton: false });
     }
+  };
+
+  const handleTimeOut = async (e) => {
+    if (e.target.name === "player1")
+      setIsLoading({ ...isLoading, timeOutButtonp1: true });
+    if (e.target.name === "player2")
+      setIsLoading({ ...isLoading, timeOutButtonp2: true });
+
+    if (ethers.isAddress(deployedGameAddress)) {
+      try {
+        const RPSContract = await getRPSContract(deployedGameAddress);
+        if (e.target.name === "player1") {
+          const tx: ethers.TransactionResponse = await RPSContract.j1Timeout();
+          await tx.wait();
+        }
+        if (e.target.name === "player2") {
+          const tx: ethers.TransactionResponse = await RPSContract.j2Timeout();
+          await tx.wait();
+        }
+        toast.success("Success!");
+        console.log("success");
+      } catch (e) {
+        console.log("error", e);
+        toast.error("Something wrong happened!");
+      }
+    }
+    if (e.target.name === "player1")
+      setIsLoading({ ...isLoading, timeOutButtonp1: false });
+    if (e.target.name === "player2")
+      setIsLoading({ ...isLoading, timeOutButtonp2: false });
   };
   const moves = [
     {
@@ -162,6 +194,26 @@ const GameDetails = () => {
           isLoading={isLoading.solveButton}
         >
           Decide winner
+        </Button>
+      </div>
+      <div className="mt-4 p-4 flex items-center justify-center">
+        <Button
+          name="player1"
+          className="ml-8 "
+          color="secondary"
+          onClick={handleTimeOut}
+          isLoading={isLoading.timeOutButtonp1}
+        >
+          Player 1 stopped playing
+        </Button>
+        <Button
+          name="player2"
+          className="ml-8 "
+          color="secondary"
+          onClick={handleTimeOut}
+          isLoading={isLoading.timeOutButtonp2}
+        >
+          Player 2 stopped playing
         </Button>
       </div>
     </>
