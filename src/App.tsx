@@ -5,6 +5,8 @@ import "./App.css";
 import AppNavigation from "./components/AppNavigation";
 import formatAddress from "./utils/formatAddress";
 import { Outlet } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
   const [account, setAccount] = useState<string>();
@@ -28,7 +30,18 @@ const App = () => {
           {connected ? formatAddress(account!) : "Connect"}
         </Button>
       </AppNavigation>
-
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />{" "}
       <Outlet />
     </>
   );

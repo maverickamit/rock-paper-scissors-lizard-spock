@@ -7,6 +7,7 @@ import { Link as RouterLink } from "react-router-dom";
 import { Card, CardBody } from "@nextui-org/react";
 import generateSalt from "../utils/generateSalt";
 import localForage from "localforage";
+import { toast } from "react-toastify";
 
 const CreateGame = () => {
   const [selectedMove, setSelectedMove] = useState("0");
@@ -46,8 +47,10 @@ const CreateGame = () => {
         resetValues();
         await RPSContract.waitForDeployment();
         setDeployedGameAddress(deployedAddress);
+        toast.success("Success!");
       } catch (e) {
         console.log("error", e);
+        toast.error("Something wrong happened!");
       }
       setIsLoading(false); //set loading to true
     }

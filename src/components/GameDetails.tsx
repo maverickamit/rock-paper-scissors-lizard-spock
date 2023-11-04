@@ -5,6 +5,8 @@ import { useParams } from "react-router-dom";
 import { ethers } from "ethers";
 import { Card, CardBody } from "@nextui-org/react";
 import localForage from "localforage";
+import { toast } from "react-toastify";
+
 const GameDetails = () => {
   const { deployedGameAddress } = useParams();
   const [selectedMoveP1, setSelectedMoveP1] = useState("0");
@@ -54,10 +56,11 @@ const GameDetails = () => {
         );
         tx.wait();
         resetValues();
-
+        toast.success("Success!");
         console.log("success");
       } catch (e) {
         console.log("error", e);
+        toast.error("Something wrong happened!");
       }
       setIsLoading({ ...isLoading, playButton: false });
     }
@@ -76,10 +79,10 @@ const GameDetails = () => {
         );
         tx.wait();
         resetValues();
-
-        console.log("success");
+        toast.success("Success!");
       } catch (e) {
         console.log("error", e);
+        toast.error("Something wrong happened!");
       }
       setIsLoading({ ...isLoading, solveButton: false });
     }
