@@ -11,7 +11,7 @@ import { toast } from "react-toastify";
 
 const CreateGame = () => {
   const [selectedMove, setSelectedMove] = useState("0");
-  const [stakedAmount, setStakedAmount] = useState("0");
+  const [stakedAmount, setStakedAmount] = useState("");
   const [player2Address, setPlayer2Address] = useState(""); //
   const [isLoading, setIsLoading] = useState(false);
   const [deployedGameAddress, setDeployedGameAddress] = useState("");
@@ -23,7 +23,7 @@ const CreateGame = () => {
   const resetValues = () => {
     setSelectedMove("0");
     setPlayer2Address("");
-    setStakedAmount("0");
+    setStakedAmount("");
   };
 
   const handleCreateGame = async () => {
