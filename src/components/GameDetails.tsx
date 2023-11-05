@@ -21,8 +21,10 @@ const GameDetails = () => {
   const [stake, setStake] = useState("0");
 
   const handleMoveChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    if (e.target.name == "player1") setSelectedMoveP1(e.target.value);
-    if (e.target.name == "player2") setSelectedMoveP2(e.target.value);
+    if (e.currentTarget.name == "player1")
+      setSelectedMoveP1(e.currentTarget.value);
+    if (e.currentTarget.name == "player2")
+      setSelectedMoveP2(e.currentTarget.value);
   };
 
   const resetValues = () => {
@@ -90,20 +92,20 @@ const GameDetails = () => {
     }
   };
 
-  const handleTimeOut = async (e) => {
-    if (e.target.name === "player1")
+  const handleTimeOut = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (e.currentTarget.name === "player1")
       setIsLoading({ ...isLoading, timeOutButtonp1: true });
-    if (e.target.name === "player2")
+    if (e.currentTarget.name === "player2")
       setIsLoading({ ...isLoading, timeOutButtonp2: true });
 
     if (ethers.isAddress(deployedGameAddress)) {
       try {
         const RPSContract = await getRPSContract(deployedGameAddress);
-        if (e.target.name === "player1") {
+        if (e.currentTarget.name === "player1") {
           const tx: ethers.TransactionResponse = await RPSContract.j1Timeout();
           await tx.wait();
         }
-        if (e.target.name === "player2") {
+        if (e.currentTarget.name === "player2") {
           const tx: ethers.TransactionResponse = await RPSContract.j2Timeout();
           await tx.wait();
         }
@@ -114,9 +116,9 @@ const GameDetails = () => {
         toast.error("Something wrong happened!");
       }
     }
-    if (e.target.name === "player1")
+    if (e.currentTarget.name === "player1")
       setIsLoading({ ...isLoading, timeOutButtonp1: false });
-    if (e.target.name === "player2")
+    if (e.currentTarget.name === "player2")
       setIsLoading({ ...isLoading, timeOutButtonp2: false });
   };
   const moves = [

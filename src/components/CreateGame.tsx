@@ -17,7 +17,7 @@ const CreateGame = () => {
   const [deployedGameAddress, setDeployedGameAddress] = useState("");
 
   const handleMoveChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedMove(e.target.value);
+    setSelectedMove(e.currentTarget.value);
   };
 
   const resetValues = () => {
@@ -120,7 +120,7 @@ const CreateGame = () => {
           label="Stake amount"
           placeholder="Enter the amount to be staked in ETH"
           value={stakedAmount}
-          onChange={(e) => setStakedAmount(e.target.value)}
+          onChange={(e) => setStakedAmount(e.currentTarget.value)}
           isRequired
         />
       </div>

@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Navbar,
   NavbarBrand,
@@ -6,7 +7,7 @@ import {
 } from "@nextui-org/react";
 import { Link } from "react-router-dom";
 
-const AppNavigation = ({ children }) => {
+const AppNavigation = ({ children }: { children: React.ReactNode }) => {
   return (
     <Navbar>
       <NavbarBrand>
