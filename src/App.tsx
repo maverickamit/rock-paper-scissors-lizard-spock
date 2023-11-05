@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import getProviderSigner from "./utils/ethereum";
 import { Button } from "@nextui-org/react";
 import "./App.css";
@@ -13,7 +13,7 @@ const App = () => {
   const [connected, setConnected] = useState<boolean>(false);
 
   const connect = async () => {
-    const { provider, signer } = await getProviderSigner();
+    const { signer } = await getProviderSigner();
     try {
       const account = await signer?.getAddress();
       setAccount(account);
@@ -22,6 +22,10 @@ const App = () => {
       console.warn(`failed to connect..`, err);
     }
   };
+
+  useEffect(() => {
+    connect();
+  }, []);
 
   return (
     <>
