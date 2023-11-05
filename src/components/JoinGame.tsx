@@ -27,7 +27,7 @@ const JoinGame = () => {
         label="Deployed Game Address"
         placeholder="Enter the address of the game"
         value={deployedGameAddress}
-        onChange={(e) => setdeployedGameAddress(e.target.value)}
+        onChange={(e) => setdeployedGameAddress(e.currentTarget.value)}
         isRequired
       />
       <Button className="ml-8" color="primary" onClick={handleJoinGame}>

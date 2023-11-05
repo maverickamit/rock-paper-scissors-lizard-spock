@@ -17,7 +17,7 @@ const CreateGame = () => {
   const [deployedGameAddress, setDeployedGameAddress] = useState("");
 
   const handleMoveChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedMove(e.currentTarget.value);
+    setSelectedMove(e.target.value);
   };
 
   const resetValues = () => {
@@ -101,7 +101,7 @@ const CreateGame = () => {
           label="Player 2 Address"
           placeholder="Enter your opponent's address"
           value={player2Address}
-          onChange={(e) => setPlayer2Address(e.target.value)}
+          onChange={(e) => setPlayer2Address(e.currentTarget.value)}
           isRequired
         />
         <Button
