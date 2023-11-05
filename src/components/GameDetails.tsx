@@ -90,20 +90,20 @@ const GameDetails = () => {
     }
   };
 
-  const handleTimeOut = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (e.currentTarget.name === "player1")
-      setIsLoading({ ...isLoading, timeOutButtonp1: true });
-    if (e.currentTarget.name === "player2")
-      setIsLoading({ ...isLoading, timeOutButtonp2: true });
+  const handleTimeOut = async (buttonType: string) => {
+    if (buttonType === "player1")
+      setIsLoading((prevState) => ({ ...prevState, timeOutButtonp1: true }));
+    if (buttonType === "player2")
+      setIsLoading((prevState) => ({ ...prevState, timeOutButtonp2: true }));
 
     if (ethers.isAddress(deployedGameAddress)) {
       try {
         const RPSContract = await getRPSContract(deployedGameAddress);
-        if (e.currentTarget.name === "player1") {
+        if (buttonType === "player1") {
           const tx: ethers.TransactionResponse = await RPSContract.j1Timeout();
           await tx.wait();
         }
-        if (e.currentTarget.name === "player2") {
+        if (buttonType === "player2") {
           const tx: ethers.TransactionResponse = await RPSContract.j2Timeout();
           await tx.wait();
         }
@@ -114,10 +114,10 @@ const GameDetails = () => {
         toast.error("Something wrong happened!");
       }
     }
-    if (e.currentTarget.name === "player1")
-      setIsLoading({ ...isLoading, timeOutButtonp1: false });
-    if (e.currentTarget.name === "player2")
-      setIsLoading({ ...isLoading, timeOutButtonp2: false });
+    if (buttonType === "player1")
+      setIsLoading((prevState) => ({ ...prevState, timeOutButtonp1: false }));
+    if (buttonType === "player2")
+      setIsLoading((prevState) => ({ ...prevState, timeOutButtonp2: false }));
   };
   const moves = [
     {
@@ -201,7 +201,7 @@ const GameDetails = () => {
           name="player1"
           className="ml-8 "
           color="secondary"
-          onClick={handleTimeOut}
+          onClick={() => handleTimeOut("player1")}
           isLoading={isLoading.timeOutButtonp1}
         >
           Player 1 stopped playing
@@ -210,7 +210,7 @@ const GameDetails = () => {
           name="player2"
           className="ml-8 "
           color="secondary"
-          onClick={handleTimeOut}
+          onClick={() => handleTimeOut("player2")}
           isLoading={isLoading.timeOutButtonp2}
         >
           Player 2 stopped playing
